@@ -1,0 +1,46 @@
+
+<?php
+//Обьектно-ориентированный подход
+@$db = new mysqli('localhost', 'ivanko', '1234', 'ivanko');
+  if (mysqli_connect_errno()) {
+    echo "Подключение невозможно: ".mysqli_connect_error();
+  }
+$query = "select * from articles";
+  $result = $db->query($query);
+  $row=$result->fetch_assoc();
+  echo ($row['title']."<br>".$row['date']."<br>".$row['text']."<br>Автор:".$row['author']);
+?>
+
+
+<?php
+//Процедурный подход
+@$db = mysqli_connect('localhost', 'ivanko', '1234', 'ivanko');
+  if (mysqli_connect_errno()) {
+    echo "Подключение невозможно: ".mysqli_connect_error();
+  }
+  $query = "select * from articles";
+$result=mysqli_query($db, $query);
+$row=mysqli_fetch_assoc($result);
+ echo ($row['title']."<br>".$row['date']."<br>".$row['text']."<br>Автор:".$row['author']);
+?>
+
+<?php
+//PDO подход
+try {
+  $conn = new PDO('mysql:host=localhost;dbname=ivanko', 'ivanko', '1234');
+  $stmt = $conn->prepare('SELECT * FROM articles');
+  $stmt->execute();
+ 
+  $result = $stmt->fetchObject();
+ 
+  if ( count($result) ) {
+    foreach($result as $row) {
+      print_r($row);
+    }
+  } else {
+    echo "Ничего не найдено.";
+  }
+} catch(PDOException $e) {
+    echo 'ERROR: ' . $e->getMessage();
+}
+?>
